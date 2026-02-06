@@ -59,11 +59,13 @@ sudo sed -i 's/^#\?ChallengeResponseAuthentication.*/ChallengeResponseAuthentica
 
 sudo systemctl restart ssh || sudo systemctl restart sshd
 
+PUBLIC_IP=$(curl -fsSL https://api.ipify.org || curl -fsSL ifconfig.me || echo "UNKNOWN")
+
 echo
 echo "====================================="
 echo "USER: dock"
 echo "PASSWORD: $PASS"
-echo "SSH: ssh dock@$(hostname -I | awk '{print $1}')"
+echo "SSH: ssh dock@$PUBLIC_IP"
 echo "====================================="
 echo
 
