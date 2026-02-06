@@ -69,5 +69,25 @@ echo "SSH: ssh dock@$PUBLIC_IP"
 echo "====================================="
 echo
 
+echo "=== SSH password authentication check ==="
+
+EFFECTIVE=$(sudo sshd -T 2>/dev/null | grep passwordauthentication | awk '{print $2}')
+
+if [ "$EFFECTIVE" = "yes" ]; then
+  echo "OK: PasswordAuthentication is ENABLED"
+else
+  echo "WARNING: PasswordAuthentication is DISABLED by effective sshd config"
+  echo
+  echo "Files containing PasswordAuthentication directives:"
+  sudo grep -R PasswordAuthentication /etc/ssh || true
+  echo
+  echo "To fix manually:"
+  echo "  sudo nano /etc/ssh/sshd_config.d/50-cloud-init.conf"
+  echo "  change: PasswordAuthentication no → yes"
+  echo "  sudo systemctl restart ssh"
+  echo
+fi
+
 echo "Done."
 
+echo
